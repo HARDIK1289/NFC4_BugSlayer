@@ -1,23 +1,43 @@
 "use client";
 import React, { useState } from "react";
-
-// 1. Import the icons from the library
 import { FcGoogle } from "react-icons/fc";
-import { FaFacebook } from "react-icons/fa";
-
+import { useRouter } from "next/router";
 const Login = () => {
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    console.log("Logging in with:", { email, password });
-    alert(`Welcome back! (Simulated login for ${email})`);
+    setLoading(true);
+
+    try {
+      const res = await fetch("/api/farmer/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await res.json();
+
+      if (data.success) {
+        alert(`✅ Welcome, ${data.user.name}`);
+        router.push("/farmer/dashboard");
+        // Optionally redirect: window.location.href = "/dashboard";
+      } else {
+        alert(`❌ ${data.message}`);
+      }
+    } catch (err) {
+      console.error("Login error:", err);
+      alert("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleSocialLogin = (provider) => {
-    console.log(`Logging in with ${provider}`);
-    alert(`Simulating login with ${provider}...`);
+    alert(`Simulating ${provider} login...`);
   };
 
   return (
@@ -28,32 +48,25 @@ const Login = () => {
         </h2>
         <p className="text-gray-500 mb-8">Connect with your community.</p>
 
-        {/* Social Login Buttons */}
         <div className="flex flex-col gap-4 mb-6">
           <button
             onClick={() => handleSocialLogin("Google")}
             className="flex items-center justify-center w-full py-3 rounded-lg border border-gray-300 text-gray-700 font-semibold hover:bg-gray-50 transition-colors"
           >
-            {/* 2. Add the Google icon here */}
             <FcGoogle className="mr-2" size={22} />
             <span>Continue with Google</span>
           </button>
         </div>
 
-        {/* Separator */}
         <div className="flex items-center my-6">
           <hr className="flex-grow border-gray-300" />
           <span className="mx-4 text-gray-400 font-medium">OR</span>
           <hr className="flex-grow border-gray-300" />
         </div>
 
-        {/* Email/Password Form */}
         <form onSubmit={handleLogin} className="flex flex-col gap-4">
           <div className="text-left">
-            <label
-              htmlFor="email"
-              className="block text-sm font-medium text-gray-700 mb-1"
-            >
+            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
               Email
             </label>
             <input
@@ -67,10 +80,7 @@ const Login = () => {
             />
           </div>
           <div className="text-left">
-            <label
-              htmlFor="password"
-              className="block text-sm font-medium text-gray-700 mb-1"
-            >
+            <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
               Password
             </label>
             <input
@@ -83,17 +93,15 @@ const Login = () => {
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
-          <a
-            href="/forgot-password"
-            className="text-sm text-blue-600 hover:underline self-end"
-          >
+          <a href="/forgot-password" className="text-sm text-blue-600 hover:underline self-end">
             Forgot password?
           </a>
           <button
             type="submit"
+            disabled={loading}
             className="w-full bg-blue-600 text-white py-3 rounded-lg font-bold text-lg hover:bg-blue-700 transition-colors"
           >
-            Log In
+            {loading ? "Logging in..." : "Log In"}
           </button>
         </form>
       </div>
