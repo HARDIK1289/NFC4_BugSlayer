@@ -2,27 +2,22 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-// 1. Import the useRouter hook
-import { useRouter } from "next/navigation";
 import { User, Mail, KeyRound, Wheat, BrainCircuit, Phone } from "lucide-react";
 
 // The form component accepts a 'role' prop
 const SignUpForm = ({ role }) => {
-  // 2. Initialize the router
-  const router = useRouter();
-
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     password: "",
     confirmPassword: "",
-    location: "",
-    expertise: "",
+    // Add role-specific fields
+    location: "", // For farmer
+    expertise: "", // For expert
   });
 
   const [error, setError] = useState("");
-  // We no longer need the success state, as we are navigating away
-  // const [success, setSuccess] = useState("");
+  const [success, setSuccess] = useState("");
 
   const isFarmer = role === "farmer";
   const title = isFarmer ? "Farmer Registration" : "Farm Expert Registration";
@@ -39,7 +34,8 @@ const SignUpForm = ({ role }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setError("");
+    setError(""); // Clear previous errors
+    setSuccess(""); // Clear previous success messages
 
     // Basic Validation
     if (formData.password !== formData.confirmPassword) {
@@ -51,15 +47,11 @@ const SignUpForm = ({ role }) => {
       return;
     }
 
-    // 3. If validation passes, navigate to the correct dashboard
+    // If validation passes
     console.log("Form Submitted:", { role, ...formData });
-    // In a real app, this navigation would happen AFTER your API call is successful.
-
-    if (role === "farmer") {
-      router.push("/farmer/dashboard");
-    } else {
-      router.push("/expert/dashboard");
-    }
+    setSuccess(`Successfully registered as a ${role}! Please log in.`);
+    // Here you would typically send the data to your backend API
+    // e.g., await fetch('/api/register', { method: 'POST', body: JSON.stringify({role, ...formData}) })
   };
 
   return (
@@ -75,7 +67,6 @@ const SignUpForm = ({ role }) => {
         </div>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-          {/* All your input fields remain exactly the same */}
           <div className="relative">
             <User
               className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-600"
@@ -104,6 +95,8 @@ const SignUpForm = ({ role }) => {
               className="w-full pl-10 pr-4 py-2 border border-gray-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
+
+          {/* Conditional field based on role */}
           {isFarmer ? (
             <div className="relative">
               <Wheat
@@ -135,6 +128,7 @@ const SignUpForm = ({ role }) => {
               />
             </div>
           )}
+
           <div className="relative">
             <KeyRound
               className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-600"
@@ -165,7 +159,9 @@ const SignUpForm = ({ role }) => {
           </div>
 
           {error && <p className="text-red-500 text-sm text-center">{error}</p>}
-          {/* The success message is no longer needed here */}
+          {success && (
+            <p className="text-green-500 text-sm text-center">{success}</p>
+          )}
 
           <button
             type="submit"
