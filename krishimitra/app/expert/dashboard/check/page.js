@@ -20,7 +20,7 @@ export default function ViewAppointments() {
       <h2 className="text-xl font-bold mb-4">Your Appointments</h2>
       <button
         onClick={fetchAppointments}
-        className="bg-green-500 text-white px-4 py-2 rounded mb-4"
+        className=" mt-10 bg-green-500 text-white px-4 py-2 rounded mb-4"
       >
         Load Appointments
       </button>

@@ -4,10 +4,12 @@ import Image from "next/image";
 import Link from "next/link";
 // NEW: Importing icons from the library we just installed
 import { User, Wheat } from "lucide-react";
+import GoogleTranslate from "./components/GoogleTranslate";
 
 export default function LandingPage() {
   return (
     <div className="landing-container-bg flex min-h-screen flex-col bg-cover bg-center text-white">
+      <GoogleTranslate/>
       <header className="flex justify-end p-6">
         <div className="flex items-center gap-4">
         </div>

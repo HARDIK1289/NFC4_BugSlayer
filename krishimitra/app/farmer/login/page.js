@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { FcGoogle } from "react-icons/fc";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 const Login = () => {
   const router = useRouter();
   const [email, setEmail] = useState("");
@@ -76,7 +76,7 @@ const Login = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full placeholder-gray-500 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
             />
           </div>
           <div className="text-left">
@@ -90,7 +90,7 @@ const Login = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-2 border placeholder-gray-500 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
             />
           </div>
           <a href="/forgot-password" className="text-sm text-blue-600 hover:underline self-end">
